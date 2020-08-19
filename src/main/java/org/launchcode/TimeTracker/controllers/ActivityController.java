@@ -6,12 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
+import javax.swing.text.html.Option;
 import javax.validation.Valid;
+import java.util.Date;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("activities")
@@ -27,6 +27,25 @@ public class ActivityController {
         return "activities/view";
     }
 
+    @PostMapping
+    public String processActivityTimerClick(@RequestParam Integer activityId, Model model) {
+        Optional<Activity> activityOptional = activityRepository.findById(activityId);
+        if (activityOptional.isPresent()) {
+            Activity anActivity = activityRepository.findById(activityId).get();
+            if (anActivity.isWorking()) {
+                anActivity.endWork();
+                anActivity.setWorking(false);
+            } else {
+                anActivity.setWorkStarted(new Date());
+                anActivity.setWorking(true);
+            }
+            activityRepository.save(anActivity);
+        }
+
+        model.addAttribute("title", "All Activities");
+        model.addAttribute("activities", activityRepository.findAll());
+        return "activities/view";
+    }
 
     @GetMapping("create")
     public String displayCreateActivityForm(Model model) {

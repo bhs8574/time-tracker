@@ -19,7 +19,13 @@
         <td><P>N/A</P></td>
         <td><p th:text="${activity.hours}"></p></td>
         <td>
-            <input type="submit" value="Start Working" class="btn" style="background-color:#323299; color:white;">
+            <form method="post">
+                <div class= "form-group">
+                    <input type="hidden" name="activityId" th:value="${activity.id}">
+                    <input th:if="${activity.working}" type="submit" value="Stop Working" class="btn" style="background-color:#993299; color:white;">
+                    <input th:unless="${activity.working}" type="submit" value="Start Working" class="btn" style="background-color:#323299; color:white;">
+                </div>
+            </form>
         </td>
     </tr>
 </table>
