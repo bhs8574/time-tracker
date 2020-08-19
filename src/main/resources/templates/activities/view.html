@@ -4,5 +4,25 @@
 <body class="container">
 
 <header th:replace="fragments :: header"></header>
+
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>Activity</th>
+        <th>Time Category</th>
+        <th>Hours</th>
+        <th>Timer</th>
+    </tr>
+    </thead>
+    <tr th:each="activity : ${activities}">
+        <td><p th:text="${activity.name}"></p></td>
+        <td><P>N/A</P></td>
+        <td><p th:text="${activity.hours}"></p></td>
+        <td>
+            <input type="submit" value="Start Working" class="btn" style="background-color:#323299; color:white;">
+        </td>
+    </tr>
+</table>
+
 </body>
 </html>

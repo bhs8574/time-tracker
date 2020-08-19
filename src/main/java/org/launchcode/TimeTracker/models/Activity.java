@@ -29,11 +29,11 @@ public class Activity extends AbstractEntity {
         this.name = name;
     }
 
-    public double getHoursAccumulated() {
+    public double getHours() {
         return hours;
     }
 
-    public void setHoursAccumulated(double hoursAccumulated) {
+    public void setHours(double hoursAccumulated) {
         this.hours = hoursAccumulated;
     }
 
