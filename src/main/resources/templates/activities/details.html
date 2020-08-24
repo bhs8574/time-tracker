@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="fragments :: head"></head>
+<body class="container">
+
+<header th:replace="fragments :: header"></header>
+
+<table th:unless="${noActivity}" class="table table-striped">
+    <tr>
+        <th>Name</th>
+        <td th:text="${activity.name}"></td>
+    </tr>
+    <tr>
+        <th>Hours Worked</th>
+        <td th:text="${activity.hours}"></td>
+    </tr>
+    <tr>
+        <form method="post">
+            <input type="hidden" name="activityId" th:value="${activity.id}">
+            <th><input type="submit" value="Add Hours" class="btn" style="background-color:#323299; color:white;"></th>
+            <td><input name="timeToAdd" value="0.0"></td>
+        </form>
+    </tr>
+</table>
+
+</body>
+</html>

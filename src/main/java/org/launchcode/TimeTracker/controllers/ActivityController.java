@@ -66,4 +66,22 @@ public class ActivityController {
         return "redirect:";
     }
 
+
+    @GetMapping("details")
+    public String displayActivityDetails(@RequestParam Integer activityId, Model model) {
+
+        Optional<Activity> result = activityRepository.findById(activityId);
+
+        if (result.isEmpty()) {
+            model.addAttribute("title", "Invalid Activity ID: " + activityId);
+            model.addAttribute("noActivity", true);
+        } else {
+            Activity activity = result.get();
+            model.addAttribute("title", activity.getName() + " Details");
+            model.addAttribute("activity", activity);
+        }
+
+        return "activities/details";
+    }
+
 }
