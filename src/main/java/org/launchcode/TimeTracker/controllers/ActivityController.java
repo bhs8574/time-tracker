@@ -84,4 +84,16 @@ public class ActivityController {
         return "activities/details";
     }
 
+
+    @PostMapping("details")
+    public String processAddTimeFromDetails(@RequestParam Integer activityId, double timeToAdd, Model model) {
+
+        Optional<Activity> optActivity = activityRepository.findById(activityId);
+        if (optActivity.isPresent()) {
+            optActivity.get().addHours(timeToAdd);
+        }
+        activityRepository.save(optActivity.get());
+        return "redirect:";
+    }
+
 }
