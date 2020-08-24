@@ -67,4 +67,8 @@ public class Activity extends AbstractEntity {
             this.workStarted = null;
         }
     }
+
+    public void addHours(double hoursToAdd) {
+        this.setHours(this.getHours()+hoursToAdd);
+    }
 }
