@@ -1,6 +1,7 @@
 package org.launchcode.TimeTracker.controllers;
 
 import org.launchcode.TimeTracker.data.ActivityRepository;
+import org.launchcode.TimeTracker.data.CategoryRepository;
 import org.launchcode.TimeTracker.models.Activity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,6 +21,9 @@ public class ActivityController {
     @Autowired
     private ActivityRepository activityRepository;
 
+    @Autowired
+    private CategoryRepository categoryRepository;
+
     @GetMapping
     public String displayActivities (Model model) {
         model.addAttribute("title", "All Activities");
@@ -27,6 +31,8 @@ public class ActivityController {
         return "activities/view";
     }
 
+
+    //Figure out if there's a way to put this logic in activity instead of below for true/false
     @PostMapping
     public String processActivityTimerClick(@RequestParam Integer activityId, Model model) {
         Optional<Activity> activityOptional = activityRepository.findById(activityId);
@@ -34,7 +40,8 @@ public class ActivityController {
             Activity anActivity = activityRepository.findById(activityId).get();
             if (anActivity.isWorking()) {
                 anActivity.endWork();
-                anActivity.setWorking(false);
+                //try to put this in activity
+                //anActivity.setWorking(false);
             } else {
                 anActivity.setWorkStarted(new Date());
                 anActivity.setWorking(true);
@@ -51,6 +58,7 @@ public class ActivityController {
     public String displayCreateActivityForm(Model model) {
         model.addAttribute("title", "Create Activity");
         model.addAttribute(new Activity());
+        model.addAttribute("categories", categoryRepository.findAll());
         return "activities/create";
     }
 

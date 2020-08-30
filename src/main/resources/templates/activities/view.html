@@ -16,7 +16,7 @@
     </thead>
     <tr th:each="activity : ${activities}">
         <td><a style="color:#663399;" th:href="'/activities/details?activityId=' + ${activity.id}" th:text="${activity.name}" ></a></td>
-        <td><P>N/A</P></td>
+        <td><P th:text="${activity.category}">N/A</P></td>
         <td><p th:text="${activity.hours}"></p></td>
         <td>
             <form method="post">

@@ -1,7 +1,9 @@
 package org.launchcode.TimeTracker.models;
 
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Date;
 
@@ -11,6 +13,10 @@ public class Activity extends AbstractEntity {
     @NotBlank(message = "Name is Required!")
     @Size(min=3, max=50, message = "Name must be between 3 and 50 characters!")
     private String name;
+
+    @NotNull
+    @ManyToOne
+    private Category category;
 
     private double hours;
 
@@ -59,16 +65,27 @@ public class Activity extends AbstractEntity {
         this.workStarted = workStarted;
     }
 
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
     public void endWork() {
         if (! (this.workStarted == null)) {
             Date timeNow = new Date();
             double hoursToAdd = (timeNow.getTime() - this.workStarted.getTime())/(60.0*60.0*1000);
             this.hours += hoursToAdd;
             this.workStarted = null;
+            this.working = false;
         }
     }
 
     public void addHours(double hoursToAdd) {
         this.setHours(this.getHours()+hoursToAdd);
     }
+
+
 }
