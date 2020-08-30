@@ -26,7 +26,13 @@
             </label>
         </div>
         <div class="form-group">
-            <label>Hours Worked on so far:
+            <label>Description
+                <input th:field="${activity.description}" class="form-control">
+            </label>
+            <p class="error" th:errors="${activity.description}"></p>
+        </div>
+        <div class="form-group">
+            <label>Hours Worked on so far
                 <input th:field="${activity.hours}" class="form-control">
             </label>
             <p class="error" th:errors="${activity.hours}"></p>
