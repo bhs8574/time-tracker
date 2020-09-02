@@ -76,6 +76,8 @@ public class ActivityController {
         return "activities/view";
     }
 
+
+
     @GetMapping("create")
     public String displayCreateActivityForm(HttpServletRequest request, HttpServletResponse response ,Model model) {
 
@@ -132,6 +134,29 @@ public class ActivityController {
             optActivity.get().addHours(timeToAdd);
         }
         activityRepository.save(optActivity.get());
+        return "redirect:";
+    }
+
+    @GetMapping("batch")
+    public String displayBatchEntry (HttpServletRequest request, Model model) {
+        HttpSession session = request.getSession();
+        User user = authenticationController.getUserFromSession(session);
+
+
+        model.addAttribute("title", "All Activities");
+        model.addAttribute("activities", user.getActivities());
+        //model.addAttribute("user", userRepository.findById(user.getId()).get());
+        return "activities/batch-entry";
+    }
+
+    @PostMapping("batch")
+    public String processBatchEntry(HttpServletRequest request, Model model) {
+        HttpSession session = request.getSession();
+        User user = authenticationController.getUserFromSession(session);
+        model.addAttribute("title", "All Activities");
+        model.addAttribute("activities", activityRepository.findAll());
+        model.addAttribute("user", userRepository.findById(user.getId()).get());
+
         return "redirect:";
     }
 
