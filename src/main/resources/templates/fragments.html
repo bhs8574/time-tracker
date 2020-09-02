@@ -18,7 +18,7 @@
             <h2 th:if="${title != null}" th:text="${title}"></h2>
             <h1 th:unless="${title != null}">Time Tracker</h1>
             <ul class="nav">
-                <li class="nav-item"><a class="nav-link" style="color:#ffffff" href="../">Sign In</a></li>
+                <li class="nav-item"><a class="nav-link" style="color:#ffffff" href="../logout">Sign Out</a></li>
                 <li class="nav-item"><a class="nav-link" style="color:#ffffff" href="../activities">View Activities</a></li>
                 <li class="nav-item"><a class="nav-link" style="color:#ffffff" href="../activities/create">Create Activity</a></li>
                 <li class="nav-item"><a class="nav-link" style="color:#ffffff" href="../">Batch Entry</a></li>
@@ -26,6 +26,16 @@
             </ul>
         </nav>
     </header>
+
+
+    <nav th:fragment="altNav" class="navbar navbar-dark" style="background-color: #663399; color: #ffffff;">
+        <h2 th:if="${title != null}" th:text="${title}"></h2>
+        <h1 th:unless="${title != null}">Time Tracker</h1>
+        <ul class="nav">
+            <li class="nav-item"><a class="nav-link" style="color:#ffffff" href="../login">Sign In</a></li>
+            <li class="nav-item"><a class="nav-link" style="color:#ffffff" href="../register">Create an Account</a></li>
+        </ul>
+    </nav>
 
 </body>
 </html>

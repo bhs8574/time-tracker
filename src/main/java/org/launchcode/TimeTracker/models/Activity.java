@@ -18,6 +18,9 @@ public class Activity extends AbstractEntity {
     @ManyToOne
     private Category category;
 
+    @ManyToOne
+    private User user;
+
     @Size(max=500, message = "Description can be a maximum of 500 characters!")
     private String description;
 
@@ -74,6 +77,14 @@ public class Activity extends AbstractEntity {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getDescription() {

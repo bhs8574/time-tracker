@@ -1,14 +1,20 @@
 package org.launchcode.TimeTracker.controllers;
 
+import org.launchcode.TimeTracker.AuthenticationFilter;
 import org.launchcode.TimeTracker.data.ActivityRepository;
 import org.launchcode.TimeTracker.data.CategoryRepository;
+import org.launchcode.TimeTracker.data.UserRepository;
 import org.launchcode.TimeTracker.models.Activity;
+import org.launchcode.TimeTracker.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.swing.text.html.Option;
 import javax.validation.Valid;
 import java.util.Date;
@@ -24,17 +30,30 @@ public class ActivityController {
     @Autowired
     private CategoryRepository categoryRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private AuthenticationController authenticationController;
+
+    @Autowired
+    private AuthenticationFilter authenticationFilter;
+
+
     @GetMapping
-    public String displayActivities (Model model) {
+    public String displayActivities (HttpServletRequest request, Model model) {
+        HttpSession session = request.getSession();
+        User user = authenticationController.getUserFromSession(session);
         model.addAttribute("title", "All Activities");
         model.addAttribute("activities", activityRepository.findAll());
+        model.addAttribute("user", userRepository.findById(user.getId()).get());
         return "activities/view";
     }
 
 
     //Figure out if there's a way to put this logic in activity instead of below for true/false
     @PostMapping
-    public String processActivityTimerClick(@RequestParam Integer activityId, Model model) {
+    public String processActivityTimerClick(@RequestParam Integer activityId, HttpServletRequest request, Model model) {
         Optional<Activity> activityOptional = activityRepository.findById(activityId);
         if (activityOptional.isPresent()) {
             Activity anActivity = activityRepository.findById(activityId).get();
@@ -49,16 +68,26 @@ public class ActivityController {
             activityRepository.save(anActivity);
         }
 
+        HttpSession session = request.getSession();
+        User user = authenticationController.getUserFromSession(session);
         model.addAttribute("title", "All Activities");
         model.addAttribute("activities", activityRepository.findAll());
+        model.addAttribute("user", userRepository.findById(user.getId()).get());
         return "activities/view";
     }
 
     @GetMapping("create")
-    public String displayCreateActivityForm(Model model) {
+    public String displayCreateActivityForm(HttpServletRequest request, HttpServletResponse response ,Model model) {
+
+        HttpSession session = request.getSession();
+        User user = authenticationController.getUserFromSession(session);
+        Activity activity = new Activity();
+        activity.setUser(user);
         model.addAttribute("title", "Create Activity");
-        model.addAttribute(new Activity());
+        //model.addAttribute(new Activity());
+        model.addAttribute(activity);
         model.addAttribute("categories", categoryRepository.findAll());
+        model.addAttribute("user", userRepository.findById(user.getId()).get());
         return "activities/create";
     }
 
@@ -67,8 +96,10 @@ public class ActivityController {
                                           Errors errors, Model model) {
         if(errors.hasErrors()) {
             model.addAttribute("title", "Create Activity");
+            model.addAttribute("categories", categoryRepository.findAll());
             return "activities/create";
         }
+
 
         activityRepository.save(newActivity);
         return "redirect:";

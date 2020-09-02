@@ -3,7 +3,11 @@
 <head th:replace="fragments :: head"></head>
 <body class="container">
 
-<header th:replace="fragments :: header"></header>
+<header >
+    <nav th:replace="fragments :: altNav">
+
+    </nav>
+</header>
 
 <form method="post">
     <div class="form-group">
@@ -21,6 +25,9 @@
 
     <input type="submit" class="btn" value="Sign In" style="background-color:#663399; color:white;" />
 </form>
+
+<p>Don't have an account?</p>
+<p>Register <a href="/register">here!</a></p>
 
 
 </body>
