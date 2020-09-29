@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="fragments :: head"></head>
+<body class="container">
+
+<header th:replace="fragments :: header"></header>
+
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>Activity</th>
+        <th>Time Category</th>
+        <th>Remove from Summary?</th>
+    </tr>
+    </thead>
+    <tr th:each="activity : ${activities}">
+        <div th:if="${activity.user.id == user.id} ">
+            <td>
+                <div>
+                    <a style="color:#663399;" th:href="'/activities/details?activityId=' + ${activity.id}" th:text="${activity.name}" ></a>
+                    <div>
+                        <br>
+                        <p th:text="'Activity Description: '+ ${activity.description}"></p>
+                        <p th:text="'Hours worked this period: '+ ${activity.hours}"></p>
+                        <p th:text="'Hours worked to date: '+ ${activity.lifeTimeHours}"></p>
+                    </div>
+                </div>
+            </td>
+
+            <td><P th:text="${activity.category}">N/A</P></td>
+            <td>
+                <form method="post">
+                    <div class= "form-group">
+                        <input type="hidden" name="activityId" th:value="${activity.id}">
+                        <input type="submit" name="add" th:value="Remove" class="btn" style="background-color:#663399; color:white;">
+                    </div>
+                </form>
+            </td>
+        </div>
+    </tr>
+</table>
+<form method="post">
+    <input type="submit" name="submitType" value="Refresh Summary" class="btn" style="background-color:#663399; color:white;">
+    <input type="submit" name="submitType" value="Export to .csv" class="btn" style="background-color:#663399; color:white;">
+    <input type="submit" name="submitType" value="Export to E-mail" class="btn" style="background-color:#663399; color:white;">
+    <input type="submit" name="submitType" value="Clear Hours" class="btn" style="background-color:#663399; color:white;">
+</form>
+
+
+</body>
+</html>

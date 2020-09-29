@@ -2,58 +2,40 @@ package org.launchcode.TimeTracker.models.dto;
 
 import org.launchcode.TimeTracker.models.Activity;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class BatchEntryDTO {
 
-    private List<Activity> activities = new ArrayList<>();
+    private Map<Activity, Double> activities = new HashMap<>();
 
-    private List<Double> hoursToAdd = new ArrayList<>();
-
-    private Map<Activity, Double> activityHours = new HashMap<>();
-
-    public BatchEntryDTO(List<Activity> activities, List<Double> hoursToAdd, Map<Activity, Double> activityHours) {
+    public BatchEntryDTO(Map<Activity, Double> activities) {
         this.activities = activities;
-        this.hoursToAdd = hoursToAdd;
-        this.activityHours = activityHours;
     }
 
     public BatchEntryDTO(){}
 
-    public void processTime() {
-        for (int i=0; i < this.activities.size(); i++) {
-            this.activities.get(i).addHours(this.hoursToAdd.get(i));
+
+    public void addActivity(Activity activity) {
+        this.activities.put(activity, 0.0);
+    }
+
+    public void setHours(Activity activity, Double hours) {
+        this.activities.remove(activity);
+        this.activities.put(activity, hours);
+    }
+
+    public void processBatch() {
+        for (Map.Entry<Activity, Double> entry : this.activities.entrySet() ) {
+            entry.getKey().addHours(entry.getValue());
         }
     }
 
-    public void processTimeMap() {
-        //
-    }
-
-    public List<Activity> getActivities() {
+    public Map<Activity, Double> getActivities() {
         return activities;
     }
 
-    public void setActivities(List<Activity> activities) {
+    public void setActivities(Map<Activity, Double> activities) {
         this.activities = activities;
-    }
-
-    public List<Double> getHoursToAdd() {
-        return hoursToAdd;
-    }
-
-    public void setHoursToAdd(List<Double> hoursToAdd) {
-        this.hoursToAdd = hoursToAdd;
-    }
-
-    public Map<Activity, Double> getActivityHours() {
-        return activityHours;
-    }
-
-    public void setActivityHours(Map<Activity, Double> activityHours) {
-        this.activityHours = activityHours;
     }
 }

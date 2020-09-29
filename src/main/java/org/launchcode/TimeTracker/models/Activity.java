@@ -24,17 +24,22 @@ public class Activity extends AbstractEntity {
     @Size(max=500, message = "Description can be a maximum of 500 characters!")
     private String description;
 
+    private double hoursToAdd;
+
     private double hours;
+
+    private double lifeTimeHours;
 
     private boolean working;
 
     private Date workStarted;
 
-    public Activity(String name, double hoursAccumulated, boolean working, Date workStarted) {
+    public Activity(String name, double hoursAccumulated, boolean working, Date workStarted, double lifeTimeHours) {
         this.name = name;
         this.hours = hoursAccumulated;
         this.working = working;
         this.workStarted = workStarted;
+        this.lifeTimeHours = hoursAccumulated;
     }
 
     public Activity() {}
@@ -95,11 +100,28 @@ public class Activity extends AbstractEntity {
         this.description = description;
     }
 
+    public double getHoursToAdd() {
+        return hoursToAdd;
+    }
+
+    public void setHoursToAdd(double hoursToAdd) {
+        this.hoursToAdd = hoursToAdd;
+    }
+
+    public double getLifeTimeHours() {
+        return lifeTimeHours;
+    }
+
+    public void setLifeTimeHours(double lifeTimeHours) {
+        this.lifeTimeHours = lifeTimeHours;
+    }
+
     public void endWork() {
         if (! (this.workStarted == null)) {
             Date timeNow = new Date();
             double hoursToAdd = (timeNow.getTime() - this.workStarted.getTime())/(60.0*60.0*1000);
             this.hours += hoursToAdd;
+            this.lifeTimeHours += hoursToAdd;
             this.workStarted = null;
             this.working = false;
         }
@@ -107,6 +129,11 @@ public class Activity extends AbstractEntity {
 
     public void addHours(double hoursToAdd) {
         this.setHours(this.getHours()+hoursToAdd);
+        this.setLifeTimeHours(this.getLifeTimeHours()+hoursToAdd);
+    }
+
+    public void clearHours() {
+        this.setHours(0.0);
     }
 
 

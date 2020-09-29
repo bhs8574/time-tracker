@@ -16,6 +16,10 @@ public class LoginFormDTO {
     @Size(min=5, max=20, message="Invalid username. Must be between 5 and 20 characters.")
     private String password;
 
+    @NotNull
+    @NotBlank
+    private String email;
+
     public String getUsername() {
         return username;
     }
@@ -32,4 +36,11 @@ public class LoginFormDTO {
         this.password = password;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }

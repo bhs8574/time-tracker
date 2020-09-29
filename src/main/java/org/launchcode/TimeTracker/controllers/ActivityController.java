@@ -6,6 +6,7 @@ import org.launchcode.TimeTracker.data.CategoryRepository;
 import org.launchcode.TimeTracker.data.UserRepository;
 import org.launchcode.TimeTracker.models.Activity;
 import org.launchcode.TimeTracker.models.User;
+import org.launchcode.TimeTracker.models.dto.BatchEntryDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,7 +18,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.swing.text.html.Option;
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -44,6 +47,7 @@ public class ActivityController {
     public String displayActivities (HttpServletRequest request, Model model) {
         HttpSession session = request.getSession();
         User user = authenticationController.getUserFromSession(session);
+
         model.addAttribute("title", "All Activities");
         model.addAttribute("activities", activityRepository.findAll());
         model.addAttribute("user", userRepository.findById(user.getId()).get());
@@ -103,6 +107,7 @@ public class ActivityController {
         }
 
 
+        newActivity.setLifeTimeHours(newActivity.getHours());
         activityRepository.save(newActivity);
         return "redirect:";
     }
@@ -127,37 +132,65 @@ public class ActivityController {
 
 
     @PostMapping("details")
-    public String processAddTimeFromDetails(@RequestParam Integer activityId, double timeToAdd, Model model) {
+    public String processAddTimeFromDetails(@RequestParam Integer activityId, @RequestParam(required = false) String delete, double timeToAdd, Model model) {
 
         Optional<Activity> optActivity = activityRepository.findById(activityId);
         if (optActivity.isPresent()) {
-            optActivity.get().addHours(timeToAdd);
+            if(timeToAdd > 0.0) {
+                optActivity.get().addHours(timeToAdd);
+                activityRepository.save(optActivity.get());
+            }
+            if(delete != null) {
+                if (delete.equals("Delete")) {
+                    activityRepository.delete(optActivity.get());
+                }
+            }
         }
-        activityRepository.save(optActivity.get());
+        //activityRepository.save(optActivity.get());
         return "redirect:";
     }
 
-    @GetMapping("batch")
-    public String displayBatchEntry (HttpServletRequest request, Model model) {
-        HttpSession session = request.getSession();
-        User user = authenticationController.getUserFromSession(session);
-
-
-        model.addAttribute("title", "All Activities");
-        model.addAttribute("activities", user.getActivities());
-        //model.addAttribute("user", userRepository.findById(user.getId()).get());
-        return "activities/batch-entry";
-    }
-
-    @PostMapping("batch")
-    public String processBatchEntry(HttpServletRequest request, Model model) {
-        HttpSession session = request.getSession();
-        User user = authenticationController.getUserFromSession(session);
-        model.addAttribute("title", "All Activities");
-        model.addAttribute("activities", activityRepository.findAll());
-        model.addAttribute("user", userRepository.findById(user.getId()).get());
-
-        return "redirect:";
-    }
+    /*
+    Batch entry stuff below.
+     */
+//
+//    @GetMapping("batch")
+//    public String displayBatchEntry (HttpServletRequest request, Model model) {
+//        HttpSession session = request.getSession();
+//        User user = authenticationController.getUserFromSession(session);
+////        List<Double> hoursList = new ArrayList<>();
+////
+////        for (int i = 0; i < user.getActivities().size(); i++) {
+////            hoursList.add(0.0);
+////        }
+//
+//        BatchEntryDTO batchEntryDTO = new BatchEntryDTO();
+//        for (Activity activity: user.getActivities()) {
+//            batchEntryDTO.addActivity(activity);
+//        }
+//
+//        model.addAttribute(new Activity());
+//        model.addAttribute("title", "All Activities");
+//        model.addAttribute("batchEntryDTO", batchEntryDTO);
+//        return "activities/batch-entry";
+//    }
+//
+//    @PostMapping("batch")
+//    public String processBatchEntry(BatchEntryDTO batchEntryDTO, HttpServletRequest request, Model model) {
+//        HttpSession session = request.getSession();
+//        User user = authenticationController.getUserFromSession(session);
+//
+//        model.addAttribute(new Activity());
+//        model.addAttribute("title", "All Activities");
+//        model.addAttribute("batchEntryDTO", batchEntryDTO);
+//        batchEntryDTO.processBatch();
+//        for (Activity activity: batchEntryDTO.getActivities().keySet()) {
+//            activityRepository.save(activity);
+//        }
+//
+//
+//        //activityRepository.save(newActivity);
+//        return "activities/batch-entry";
+//    }
 
 }
