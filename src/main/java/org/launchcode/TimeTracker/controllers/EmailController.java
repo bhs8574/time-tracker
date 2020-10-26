@@ -4,6 +4,7 @@ import org.launchcode.TimeTracker.AuthenticationFilter;
 import org.launchcode.TimeTracker.data.ActivityRepository;
 import org.launchcode.TimeTracker.data.CategoryRepository;
 import org.launchcode.TimeTracker.data.UserRepository;
+import org.launchcode.TimeTracker.models.Activity;
 import org.launchcode.TimeTracker.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -53,12 +54,25 @@ public class EmailController {
         HttpSession session = request.getSession();
         User user = authenticationController.getUserFromSession(session);
 
+        StringBuilder emailBody = new StringBuilder("Hello, " + user.getUsername() + "!\n" +
+                "Here is a summary of your work so far: \n\n");
+        for (Activity activity: user.getActivities()) {
+            emailBody.append("Activity: ");
+            emailBody.append(activity.getName());
+            emailBody.append("\n");
+            emailBody.append("Hours worked: ");
+            emailBody.append(activity.getHours());
+            emailBody.append("\n\n");
+        }
+
+        emailBody.append("\nThank you!");
+
         final MimeMessage mimeMessage = this.mailSender.createMimeMessage();
         final MimeMessageHelper message = new MimeMessageHelper(mimeMessage, "UTF-8");
-        message.setSubject("Test Email");
+        message.setSubject("Activity Summary for " + user.getUsername());
         message.setFrom("TimeTrackerNotifications@gmail.com");
         message.setTo(user.getEmail());
-        message.setText("Hey, this is some stuff.");
+        message.setText(emailBody.toString());
 
         this.mailSender.send(mimeMessage);
 
