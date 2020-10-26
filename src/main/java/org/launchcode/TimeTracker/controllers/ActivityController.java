@@ -6,7 +6,6 @@ import org.launchcode.TimeTracker.data.CategoryRepository;
 import org.launchcode.TimeTracker.data.UserRepository;
 import org.launchcode.TimeTracker.models.Activity;
 import org.launchcode.TimeTracker.models.User;
-import org.launchcode.TimeTracker.models.dto.BatchEntryDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,11 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.swing.text.html.Option;
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -43,28 +39,28 @@ public class ActivityController {
     private AuthenticationFilter authenticationFilter;
 
 
+    //Displays all activities owned by a user in a table
     @GetMapping
     public String displayActivities (HttpServletRequest request, Model model) {
         HttpSession session = request.getSession();
         User user = authenticationController.getUserFromSession(session);
 
         model.addAttribute("title", "All Activities");
-        model.addAttribute("activities", activityRepository.findAll());
-        model.addAttribute("user", userRepository.findById(user.getId()).get());
+        model.addAttribute("activities", user.getActivities());
+        model.addAttribute("user", user.getId());
         return "activities/view";
     }
 
-
-    //Figure out if there's a way to put this logic in activity instead of below for true/false
+    //Handles clicking the timer button on an activity
     @PostMapping
     public String processActivityTimerClick(@RequestParam Integer activityId, HttpServletRequest request, Model model) {
         Optional<Activity> activityOptional = activityRepository.findById(activityId);
+        //optional check to see if an activity is present
         if (activityOptional.isPresent()) {
             Activity anActivity = activityRepository.findById(activityId).get();
+            //if activity is currently working, end the work.  otherwise it starts some work
             if (anActivity.isWorking()) {
                 anActivity.endWork();
-                //try to put this in activity
-                //anActivity.setWorking(false);
             } else {
                 anActivity.setWorkStarted(new Date());
                 anActivity.setWorking(true);
@@ -75,28 +71,31 @@ public class ActivityController {
         HttpSession session = request.getSession();
         User user = authenticationController.getUserFromSession(session);
         model.addAttribute("title", "All Activities");
-        model.addAttribute("activities", activityRepository.findAll());
-        model.addAttribute("user", userRepository.findById(user.getId()).get());
+        model.addAttribute("activities", user.getActivities());
+        model.addAttribute("user", user.getId());
         return "activities/view";
     }
 
 
-
+    //handles creating the create activity page
     @GetMapping("create")
     public String displayCreateActivityForm(HttpServletRequest request, HttpServletResponse response ,Model model) {
 
         HttpSession session = request.getSession();
         User user = authenticationController.getUserFromSession(session);
+
+        //creates a new empty activity and assigns it to the session user
         Activity activity = new Activity();
         activity.setUser(user);
+
         model.addAttribute("title", "Create Activity");
-        //model.addAttribute(new Activity());
         model.addAttribute(activity);
         model.addAttribute("categories", categoryRepository.findAll());
-        model.addAttribute("user", userRepository.findById(user.getId()).get());
+        model.addAttribute("user", user.getId());
         return "activities/create";
     }
 
+    //process the form and create the activity
     @PostMapping("create")
     public String processCreateActivityForm(@ModelAttribute @Valid Activity newActivity,
                                           Errors errors, Model model) {
@@ -113,11 +112,13 @@ public class ActivityController {
     }
 
 
+    //displays a detailed information page for an activity with the option to delete the activity or add hours.
     @GetMapping("details")
     public String displayActivityDetails(@RequestParam Integer activityId, Model model) {
 
         Optional<Activity> result = activityRepository.findById(activityId);
 
+        //If an activity id that does not exist is used in the url, return an error page.  Otherwise display the activity
         if (result.isEmpty()) {
             model.addAttribute("title", "Invalid Activity ID: " + activityId);
             model.addAttribute("noActivity", true);
@@ -131,22 +132,25 @@ public class ActivityController {
     }
 
 
+    //Handles adding hours or deleting an activity from the details page.
     @PostMapping("details")
     public String processAddTimeFromDetails(@RequestParam Integer activityId, @RequestParam(required = false) String delete, double timeToAdd, Model model) {
 
         Optional<Activity> optActivity = activityRepository.findById(activityId);
+        //ensure the optional is actually there
         if (optActivity.isPresent()) {
+            //if the time to add is a positive value larger than 0, add the time to the activity.
             if(timeToAdd > 0.0) {
                 optActivity.get().addHours(timeToAdd);
                 activityRepository.save(optActivity.get());
             }
+            //if the delete button was clicked, delete the activity
             if(delete != null) {
                 if (delete.equals("Delete")) {
                     activityRepository.delete(optActivity.get());
                 }
             }
         }
-        //activityRepository.save(optActivity.get());
         return "redirect:";
     }
 

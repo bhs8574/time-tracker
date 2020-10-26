@@ -10,7 +10,6 @@
     <tr>
         <th>Activity</th>
         <th>Time Category</th>
-        <th>Remove from Summary?</th>
     </tr>
     </thead>
     <tr th:each="activity : ${activities}">
@@ -28,6 +27,7 @@
             </td>
 
             <td><P th:text="${activity.category}">N/A</P></td>
+            <!--
             <td>
                 <form method="post">
                     <div class= "form-group">
@@ -36,13 +36,13 @@
                     </div>
                 </form>
             </td>
+            -->
         </div>
     </tr>
 </table>
 <form method="post">
-    <input type="submit" name="submitType" value="Refresh Summary" class="btn" style="background-color:#663399; color:white;">
     <input type="submit" name="submitType" value="Export to .csv" class="btn" style="background-color:#663399; color:white;">
-    <input type="submit" name="submitType" value="Export to E-mail" class="btn" style="background-color:#663399; color:white;">
+    <input type="submit" name="submitType" value="Export to E-mail" class="btn" style="background-color:grey; color:white;">
     <input type="submit" name="submitType" value="Clear Hours" class="btn" style="background-color:#663399; color:white;">
 </form>
 
