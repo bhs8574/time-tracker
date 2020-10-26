@@ -75,7 +75,7 @@ public class SummaryController {
             } else if (submitType.equals("Export to .csv")){
                 return "redirect:summary/export";
             } else if (submitType.equals("Export to E-mail")) {
-                String email = "placeholder";
+                return "redirect:email";
             }
         }
 
