@@ -20,8 +20,8 @@
                     <div>
                         <br>
                         <p th:text="'Activity Description: '+ ${activity.description}"></p>
-                        <p th:text="'Hours worked this period: '+ ${activity.hours}"></p>
-                        <p th:text="'Hours worked to date: '+ ${activity.lifeTimeHours}"></p>
+                        <p th:text="'Hours worked this period: '+ ${#numbers.formatDecimal(activity.hours == null ? 0 : activity.hours, 1, 2)}"></p>
+                        <p th:text="'Hours worked to date: '+ ${#numbers.formatDecimal(activity.lifeTimeHours == null ? 0 : activity.lifeTimeHours, 1, 2)}"></p>
                     </div>
                 </div>
             </td>
@@ -42,7 +42,7 @@
 </table>
 <form method="post">
     <input type="submit" name="submitType" value="Export to .csv" class="btn" style="background-color:#663399; color:white;">
-    <input type="submit" name="submitType" value="Export to E-mail" class="btn" style="background-color:grey; color:white;">
+    <input type="submit" name="submitType" value="Export to E-mail" class="btn" style="background-color:#663399; color:white;">
     <input type="submit" name="submitType" value="Clear Hours" class="btn" style="background-color:#663399; color:white;">
 </form>
 

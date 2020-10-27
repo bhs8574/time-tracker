@@ -17,7 +17,7 @@
     <tr th:each="activity : ${activities}">
             <td><a style="color:#663399;" th:href="'/activities/details?activityId=' + ${activity.id}" th:text="${activity.name}" ></a></td>
             <td><P th:text="${activity.category}">N/A</P></td>
-            <td><p th:text="${activity.hours}"></p></td>
+            <td><p th:text="${#numbers.formatDecimal(activity.hours == null ? 0 : activity.hours, 1, 2)}"></p></td>
             <td>
                 <form method="post">
                     <div class= "form-group">
