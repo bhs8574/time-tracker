@@ -21,6 +21,7 @@ public class CategoryController {
     @Autowired
     private CategoryRepository categoryRepository;
 
+    //Displays create category page
     @GetMapping("create")
     public String displayCreateActivityForm(Model model) {
         model.addAttribute("title", "Create Category");
@@ -28,14 +29,17 @@ public class CategoryController {
         return "categories/create";
     }
 
+    //Process create category form and create the category if valid
     @PostMapping("create")
     public String processCreateActivityForm(@ModelAttribute @Valid Category newCategory,
                                             Errors errors, Model model) {
+        //If there are errors, reload the page and display them.
         if(errors.hasErrors()) {
             model.addAttribute("title", "Create Category");
             return "categories/create";
         }
 
+        //If there are no errors, create and save the category
         categoryRepository.save(newCategory);
         return "redirect:../activities/create";
     }

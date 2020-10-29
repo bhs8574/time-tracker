@@ -20,10 +20,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.net.http.HttpHeaders;
 import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+
 
 @Controller
 @RequestMapping("summary")
@@ -45,6 +43,7 @@ public class SummaryController {
     @Autowired
     private AuthenticationFilter authenticationFilter;
 
+    //Display a summary page of activities for the current user
     @GetMapping
     public String getSummary(HttpServletRequest request, Model model) {
 
