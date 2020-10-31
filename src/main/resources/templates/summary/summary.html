@@ -16,12 +16,14 @@
         <div th:if="${activity.user.id == user.id} ">
             <td>
                 <div>
-                    <a style="color:#663399;" th:href="'/activities/details?activityId=' + ${activity.id}" th:text="${activity.name}" ></a>
                     <div>
-                        <br>
-                        <p th:text="'Activity Description: '+ ${activity.description}"></p>
-                        <p th:text="'Hours worked this period: '+ ${#numbers.formatDecimal(activity.hours == null ? 0 : activity.hours, 1, 2)}"></p>
-                        <p th:text="'Hours worked to date: '+ ${#numbers.formatDecimal(activity.lifeTimeHours == null ? 0 : activity.lifeTimeHours, 1, 2)}"></p>
+                        <a class="btn btn-sm" data-toggle="collapse" th:href="'#collapse' + ${activity.id}" role="button" style="background-color:#663399; color:white;" color="white" th:text="${activity.name}"  ></a>
+                        <div class="collapse" th:id="'collapse' + ${activity.id}">
+                            <br>
+                            <p th:text="'Activity Description: '+ ${activity.description}"></p>
+                            <p th:text="'Hours worked this period: '+ ${#numbers.formatDecimal(activity.hours == null ? 0 : activity.hours, 1, 2)}"></p>
+                            <p th:text="'Hours worked to date: '+ ${#numbers.formatDecimal(activity.lifeTimeHours == null ? 0 : activity.lifeTimeHours, 1, 2)}"></p>
+                        </div>
                     </div>
                 </div>
             </td>
