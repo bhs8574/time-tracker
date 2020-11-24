@@ -57,6 +57,7 @@ public class SummaryController {
         return "summary/summary";
     }
 
+    //Processes user actions from the summary page.
     @PostMapping
     public String processSummary(@RequestParam(required = false) Integer activityId,
                                  @RequestParam(required=false) String submitType,
@@ -66,13 +67,17 @@ public class SummaryController {
         User user = authenticationController.getUserFromSession(session);
 
         if (submitType != null){
+            //If the input is to clear the form, loop through the activities for the user and clear
+            //the hours for the current work period.
             if (submitType.equals("Clear Hours")) {
                 for (Activity activity: user.getActivities()) {
                     activity.clearHours();
                     activityRepository.save(activity);
                 }
+            //If export is desired, redirect to export handler
             } else if (submitType.equals("Export to .csv")){
                 return "redirect:summary/export";
+            //If Email summary is desired, redirect to email controller.
             } else if (submitType.equals("Export to E-mail")) {
                 return "redirect:email";
             }
@@ -84,22 +89,27 @@ public class SummaryController {
         return "redirect:summary";
     }
 
+    //Handles exporting summary data to a .csv file
     @GetMapping("export")
     public void exportToCSV(HttpServletResponse response, HttpServletRequest request) throws Exception {
 
         HttpSession session = request.getSession();
         User user = authenticationController.getUserFromSession(session);
 
+        //Creates a file name from the data and the logged in user
         String fileName = "Activities_Export_" + user.getUsername() + "_" + new Date().toString();
         response.setContentType("text/csv");
         response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
 
+        //Sets up the file to be a normal .csv file
         StatefulBeanToCsv<Activity> writer = new StatefulBeanToCsvBuilder<Activity>(response.getWriter())
                 .withQuotechar(CSVWriter.NO_QUOTE_CHARACTER)
                 .withSeparator(CSVWriter.DEFAULT_SEPARATOR)
                 .withOrderedResults(false)
                 .build();
 
+        //Writes all the data from the activity objects worked on by the current user to the file
+        //TODO Look at separating out more useful data from activity rather than all of the data.
         writer.write(user.getActivities());
     }
 

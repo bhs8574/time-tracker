@@ -54,6 +54,9 @@ public class EmailController {
         HttpSession session = request.getSession();
         User user = authenticationController.getUserFromSession(session);
 
+        //Here the email body is built.  Currently it is just used with a string builder.
+        //Later I want to implement a template system.
+        //TODO set up email template
         StringBuilder emailBody = new StringBuilder("Hello, " + user.getUsername() + "!\n" +
                 "Here is a summary of your work so far: \n\n");
         for (Activity activity: user.getActivities()) {
@@ -67,6 +70,7 @@ public class EmailController {
 
         emailBody.append("\nThank you!");
 
+        //Creates and sends the email using the javaMail package and data from the current logged user.
         final MimeMessage mimeMessage = this.mailSender.createMimeMessage();
         final MimeMessageHelper message = new MimeMessageHelper(mimeMessage, "UTF-8");
         message.setSubject("Activity Summary for " + user.getUsername());
