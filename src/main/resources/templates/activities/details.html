@@ -19,17 +19,28 @@
         <td th:text="${activity.description}"></td>
     </tr>
     <tr>
-        <th>Hours Worked</th>
+        <th>Hours Worked This Period</th>
         <td th:text="${#numbers.formatDecimal(activity.hours == null ? 0 : activity.hours, 1, 3)}"></td>
+    </tr>
+    <tr>
+        <th>Hours Worked to Date</th>
+        <td th:text="${#numbers.formatDecimal(activity.lifeTimeHours == null ? 0 : activity.lifeTimeHours, 1, 3)}"></td>
     </tr>
     <tr>
         <form method="post">
             <input type="hidden" name="activityId" th:value="${activity.id}">
-            <th><input type="submit" value="Add Hours" class="btn" style="background-color:#663399; color:white;"></th>
-            <td><input name="timeToAdd" value="0.0"></td>
-            <tr><td><input type="submit" name="delete" value="Delete" class="btn" style="background-color:#990000; color:white;"></td></tr>
+            <th>Add Hours </th>
+            <td>
+                <input name="timeToAdd" value="0.0">
+                <input type="submit" value="Add Hours" class="btn" style="background-color:#663399; color:white;">
+            </td>
         </form>
     </tr>
+    <form method="post">
+        <input type="hidden" name="activityId" th:value="${activity.id}">
+        <th>Delete activity?</th>
+        <td><input type="submit" name="delete" value="Delete" class="btn" style="background-color:#990000; color:white;"></td>
+    </form>
 </table>
 
 </body>

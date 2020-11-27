@@ -6,6 +6,7 @@ import org.launchcode.TimeTracker.data.CategoryRepository;
 import org.launchcode.TimeTracker.data.UserRepository;
 import org.launchcode.TimeTracker.models.Activity;
 import org.launchcode.TimeTracker.models.User;
+import org.launchcode.TimeTracker.models.dto.BatchEntryDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -154,47 +155,50 @@ public class ActivityController {
         return "redirect:";
     }
 
+
+
     /*
     Batch entry stuff below.
      */
-//
-//    @GetMapping("batch")
-//    public String displayBatchEntry (HttpServletRequest request, Model model) {
-//        HttpSession session = request.getSession();
-//        User user = authenticationController.getUserFromSession(session);
-////        List<Double> hoursList = new ArrayList<>();
-////
-////        for (int i = 0; i < user.getActivities().size(); i++) {
-////            hoursList.add(0.0);
-////        }
-//
-//        BatchEntryDTO batchEntryDTO = new BatchEntryDTO();
-//        for (Activity activity: user.getActivities()) {
-//            batchEntryDTO.addActivity(activity);
-//        }
-//
-//        model.addAttribute(new Activity());
-//        model.addAttribute("title", "All Activities");
-//        model.addAttribute("batchEntryDTO", batchEntryDTO);
-//        return "activities/batch-entry";
-//    }
-//
-//    @PostMapping("batch")
-//    public String processBatchEntry(BatchEntryDTO batchEntryDTO, HttpServletRequest request, Model model) {
-//        HttpSession session = request.getSession();
-//        User user = authenticationController.getUserFromSession(session);
-//
-//        model.addAttribute(new Activity());
-//        model.addAttribute("title", "All Activities");
-//        model.addAttribute("batchEntryDTO", batchEntryDTO);
-//        batchEntryDTO.processBatch();
-//        for (Activity activity: batchEntryDTO.getActivities().keySet()) {
-//            activityRepository.save(activity);
-//        }
-//
-//
-//        //activityRepository.save(newActivity);
-//        return "activities/batch-entry";
-//    }
+/*    @GetMapping("batch")
+    public String displayBatchEntry (HttpServletRequest request, Model model) {
+        HttpSession session = request.getSession();
+        User user = authenticationController.getUserFromSession(session);
+*//*        List<Double> hoursList = new ArrayList<>();
+
+        for (int i = 0; i < user.getActivities().size(); i++) {
+            hoursList.add(0.0);
+        }*//*
+
+
+        BatchEntryDTO batchEntryDTO = new BatchEntryDTO();
+        for (Activity activity: user.getActivities()) {
+            batchEntryDTO.addActivity(activity);
+        }
+
+        model.addAttribute(new Activity());
+        model.addAttribute("title", "All Activities");
+        model.addAttribute("batchEntryDTO", batchEntryDTO);
+        return "activities/batch-entry";
+    }
+
+    @PostMapping("batch")
+    public String processBatchEntry(@RequestAttribute BatchEntryDTO batchEntryDTO, HttpServletRequest request, Model model) {
+        HttpSession session = request.getSession();
+        User user = authenticationController.getUserFromSession(session);
+
+        model.addAttribute(new Activity());
+        model.addAttribute("title", "All Activities");
+        model.addAttribute("batchEntryDTO", batchEntryDTO);
+        batchEntryDTO.processBatch();
+        for (Activity activity: batchEntryDTO.getActivities().keySet()) {
+            activityRepository.save(activity);
+        }
+
+
+        //activityRepository.save(newActivity);
+        return "activities/batch-entry";
+    }*/
+
 
 }
